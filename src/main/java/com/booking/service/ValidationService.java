@@ -10,8 +10,13 @@ import com.booking.models.Service;
 
 public class ValidationService {
     // Buatlah function sesuai dengan kebutuhan
-    public static void validateInput(){
-
+    public static boolean validateInput(String input, String regex){
+        if(input.matches(regex)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public static boolean validateCustomerId(List<Person> personList, String customerID){
@@ -26,8 +31,21 @@ public class ValidationService {
         return serviceList.stream().anyMatch(service -> service.getServiceId().equals(serviceID));
     }
 
+    public static boolean validateChoosenService(List<Service> serviceList, String serviceID){
+        return serviceList.stream().anyMatch(service -> service.getServiceId().equals(serviceID));
+    }
+
     public static boolean validateReservationId(List<Reservation> reservationList, String reservationID){
         return reservationList.stream().anyMatch(reservation -> reservation.getReservationId().equals(reservationID));
+    }
+
+    public static boolean validateAddMoreService(String input){
+        if(input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("T")){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public static boolean validateReservationWorkstage(List<Reservation> reservationList, String reservationID){

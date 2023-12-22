@@ -22,6 +22,8 @@ public class ReservationService {
         List<Service> servicesTemp = new ArrayList<>();
         String tambahService = "";
 
+        int serviceTempCount = -1;
+
         Reservation reservationTemp;
 
         // Input customer id
@@ -58,11 +60,29 @@ public class ReservationService {
                 }
             } while (!ValidationService.validateServiceId(serviceList, serviceID));
 
-            servicesTemp.add(getServiceByServiceId(serviceList, serviceID));
+            
+            if(ValidationService.validateChoosenService(servicesTemp, serviceID)){
+                System.out.println("---------");
+                System.out.println("! Service sudah dipilih");
+            }
+            else{
+                servicesTemp.add(getServiceByServiceId(serviceList, serviceID));
+                serviceTempCount++;
+            }
 
-            System.out.print("Ingin pilih service lain?(Y/T) : ");
-            tambahService = input.nextLine();
-        } while (!tambahService.equalsIgnoreCase("T"));
+            System.out.println("---------");
+            if(!(serviceTempCount == serviceList.size()-1)){
+                do {
+                    System.out.print("Ingin pilih service lain?(Y/T) : ");
+                    tambahService = input.nextLine();
+                    if(!ValidationService.validateAddMoreService(tambahService)){
+                        System.out.println("!!! Aksi tersebut tidak tersedia");
+                    }
+                } while (!ValidationService.validateAddMoreService(tambahService));   
+                System.out.println("---------");
+            }
+            
+        } while (!tambahService.equalsIgnoreCase("T") && !(serviceTempCount == serviceList.size()-1));
 
         reservationTemp = new Reservation(null, getCustomerByCustomerId(personList, customerID), getEmployeeByEmployeeId(personList, employeeID), servicesTemp, "In Process");
         reservationList.add(reservationTemp);
@@ -103,25 +123,32 @@ public class ReservationService {
         String reservationID = "";
         String action = "";
 
-        do {
-            System.out.print("Silahkan masukan reservation ID : ");
-            reservationID = input.nextLine();
+        PrintService.showRecentReservation(reservationList);
 
-            if(!ValidationService.validateReservationId(reservationList, reservationID) && !ValidationService.validateReservationWorkstage(reservationList, reservationID)){
-                System.out.println("!!! Reservation atas ID tersebut tidak ditemukan dan atau statusnya sudah \"finish\" atau \"canceled\"");
-            } 
-        } while (!ValidationService.validateReservationId(reservationList, reservationID) && !ValidationService.validateReservationWorkstage(reservationList, reservationID));
+        if(!reservationList.isEmpty()){
+            do {
+                System.out.print("Silahkan masukan reservation ID : ");
+                reservationID = input.nextLine();
 
-        do {
-            System.out.print("Selesaikan reservasi : ");
-            action = input.nextLine();
+                if(!ValidationService.validateReservationId(reservationList, reservationID) && !ValidationService.validateReservationWorkstage(reservationList, reservationID)){
+                    System.out.println("!!! Reservation atas ID tersebut tidak ditemukan dan atau statusnya sudah \"finish\" atau \"canceled\"");
+                } 
+            } while (!ValidationService.validateReservationId(reservationList, reservationID) && !ValidationService.validateReservationWorkstage(reservationList, reservationID));
 
-            if(!ValidationService.validateFinishReservationAction(action)){
-                System.out.println("!!! Aksi tersebut tidak tersedia");
-            } 
-        } while (!ValidationService.validateFinishReservationAction(action));
+            do {
+                System.out.print("Selesaikan reservasi : ");
+                action = input.nextLine();
 
-        finishingReservation(reservationList, reservationID, action);
+                if(!ValidationService.validateFinishReservationAction(action)){
+                    System.out.println("!!! Aksi tersebut tidak tersedia");
+                } 
+            } while (!ValidationService.validateFinishReservationAction(action));
+
+            finishingReservation(reservationList, reservationID, action);
+        }
+        else{
+            System.out.println("(Tidak ada data)");
+        }
     }
 
     public static void finishingReservation(List<Reservation> reservationList, String reservationID, String action){
@@ -131,6 +158,8 @@ public class ReservationService {
         else{
             reservationList.stream().filter(reservation -> reservation.getReservationId().equals(reservationID)).forEach(reservation -> reservation.setWorkstage("Canceled"));
         }
+
+        System.out.println("Reservasi dengan id " + reservationID + "sudah " + action);
     }
 
     // Silahkan tambahkan function lain, dan ubah function diatas sesuai kebutuhan

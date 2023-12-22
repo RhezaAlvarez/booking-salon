@@ -21,21 +21,38 @@ public class MenuService {
         String[] mainMenuArr = {"Show Data", "Create Reservation", "Complete/cancel reservation", "Exit"};
         String[] subMenuArr = {"Recent Reservation", "Show Customer", "Show Available Employee", "History Reservation + Total Keuntungan","Back to main menu"};
     
-        int optionMainMenu;
-        int optionSubMenu;
+        String optionMainMenu = "";
+        String optionSubMenu = "";
 
 		boolean backToMainMenu = false;
         boolean backToSubMenu = false;
         do {
-            PrintService.printMenu("Main Menu", mainMenuArr);
-            optionMainMenu = Integer.valueOf(input.nextLine());
-            switch (optionMainMenu) {
+            PrintService.printMenu("MAIN MENU", mainMenuArr);
+            System.out.println("---------");
+            do {
+                System.out.print("Input : ");
+                optionMainMenu = input.nextLine();
+
+                if(!ValidationService.validateInput(optionMainMenu, "[0-3]")){
+                    System.out.println("Aksi tersebut tidak tersedia");
+                }
+            } while (!ValidationService.validateInput(optionMainMenu, "[0-3]"));
+            
+            switch (Integer.valueOf(optionMainMenu)) {
                 case 1:
                     do {
-                        PrintService.printMenu("Show Data", subMenuArr);
-                        optionSubMenu = Integer.valueOf(input.nextLine());
+                        PrintService.printMenu("SHOW DATA", subMenuArr);
+                        System.out.println("---------");
+                        do {
+                            System.out.print("Input : ");
+                            optionSubMenu = input.nextLine();
+
+                            if(!ValidationService.validateInput(optionSubMenu, "[0-4]")){
+                                System.out.println("Aksi tersebut tidak tersedia");
+                            }
+                        } while (!ValidationService.validateInput(optionSubMenu, "[0-4]"));
                         // Sub menu - menu 1
-                        switch (optionSubMenu) {
+                        switch (Integer.valueOf(optionSubMenu)) {
                             case 1:
                                 // panggil fitur tampilkan recent reservation
                                 PrintService.showRecentReservation(reservationList);
