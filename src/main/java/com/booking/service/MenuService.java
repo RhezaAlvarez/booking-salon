@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.booking.models.Customer;
 import com.booking.models.Person;
 import com.booking.models.Reservation;
 import com.booking.models.Service;
@@ -18,7 +19,7 @@ public class MenuService {
 
     public static void mainMenu() {
         String[] mainMenuArr = {"Show Data", "Create Reservation", "Complete/cancel reservation", "Exit"};
-        String[] subMenuArr = {"Recent Reservation", "Show Customer", "Show Available Employee", "Back to main menu"};
+        String[] subMenuArr = {"Recent Reservation", "Show Customer", "Show Available Employee", "History Reservation + Total Keuntungan","Back to main menu"};
     
         int optionMainMenu;
         int optionSubMenu;
@@ -37,26 +38,32 @@ public class MenuService {
                         switch (optionSubMenu) {
                             case 1:
                                 // panggil fitur tampilkan recent reservation
+                                PrintService.showRecentReservation(reservationList);
                                 break;
                             case 2:
                                 // panggil fitur tampilkan semua customer
+                                PrintService.showAllCustomer(personList);
                                 break;
                             case 3:
                                 // panggil fitur tampilkan semua employee
+                                PrintService.showAllEmployee(personList);
                                 break;
                             case 4:
                                 // panggil fitur tampilkan history reservation + total keuntungan
+                                PrintService.showHistoryReservation(reservationList);
                                 break;
                             case 0:
-                                backToSubMenu = false;
+                                backToSubMenu = true;
                         }
                     } while (!backToSubMenu);
                     break;
                 case 2:
                     // panggil fitur menambahkan reservation
+                    ReservationService.createReservation(reservationList, personList);
                     break;
                 case 3:
                     // panggil fitur mengubah workstage menjadi finish/cancel
+                    ReservationService.editReservationWorkstage(reservationList);
                     break;
                 case 0:
                     backToMainMenu = false;

@@ -13,6 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Reservation {
+    private static int idNum = 0; 
     private String reservationId;
     private Customer customer;
     private Employee employee;
@@ -23,7 +24,7 @@ public class Reservation {
 
     public Reservation(String reservationId, Customer customer, Employee employee, List<Service> services,
             String workstage) {
-        this.reservationId = reservationId;
+        this.reservationId = generateReservationID();
         this.customer = customer;
         this.employee = employee;
         this.services = services;
@@ -31,7 +32,18 @@ public class Reservation {
         this.workstage = workstage;
     };
 
+    private String generateReservationID(){
+        if(idNum < 10){
+            idNum++;
+            return "Rsv-0" + idNum;
+        }
+        else{
+            idNum++;
+            return "Rsv-" + idNum;
+        }
+    }
+
     private double calculateReservationPrice(){
-        return 0;
+        return services.stream().mapToDouble(service -> service.getPrice()).sum();
     }
 }

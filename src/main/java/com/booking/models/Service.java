@@ -15,4 +15,9 @@ public class Service {
     private String serviceId;
     private String serviceName;
     private double price;
+    
+    @Override
+    public String toString() {
+        return serviceName;
+    }
 }
